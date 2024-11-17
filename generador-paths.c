@@ -4,7 +4,6 @@
 #include <ctype.h>
 #include <windows.h>
 
-
 struct path{
     char ruta[128];
     int niveles;
@@ -32,11 +31,11 @@ int main(){
            guardado = guardaRuta(ruta,paths,&cantidad_de_paths_cargados);
            if(strcmp(guardado,"*** PATH CREADO CON EXITO! ***") == 0){
                 printf("\n");
-                printf("%s",guardado);
+                printf("\n %s \n",guardado);
                 printf("\n");
            } else{
                 printf("\n");
-                printf("%s",guardado);
+                printf("\n %s \n",guardado);
                 printf("\n");
            }
 
@@ -62,31 +61,35 @@ int main(){
 
 char * cargaRuta(){
     static char ruta[128];
+    int i;
 
     printf("\n + Ingrese path: ");
     fgets(ruta,sizeof(ruta),stdin);
     ruta[strcspn(ruta,"\n")] = '\0';
     printf("\n");
     printf("\n - Path generado - \n");
+
     return ruta;
 }
 
-int validaRuta(char *ruta){
-    int longitud_path,i,flag = 0,longitud_token,flag2 = 0;
-    char delim[] = "/", *token;
 
-    longitud_path = strlen(ruta);
+
+int validaRuta(char *ruta){
+    int longitud_path,i,flag = 0,longitud_token;
+    char delim[] = "/", *token,copia_ruta[128];
+
+    strcpy(copia_ruta,ruta);
+
+    longitud_path = strlen(copia_ruta);
     if(longitud_path >= 3 && longitud_path <= 128){
         printf("\n * LONGITUD VALIDA * \n");
-        if(ruta[0] == '/' && ruta[longitud_path - 1] == '/'){
+        if(copia_ruta[0] == '/' && copia_ruta[longitud_path - 1] == '/'){
 
-            token = strtok(ruta,delim);
+            token = strtok(copia_ruta,delim);
             while(token != NULL){
                 longitud_token = strlen(token);
                 for(i = 0; i < longitud_token; i++){
-                    if(isalnum(token[i]) != 0){
-                        continue;
-                    } else{
+                    if(isalnum(token[i]) == 0){
                         flag = 1;
                         break;
                     }
@@ -101,25 +104,22 @@ int validaRuta(char *ruta){
                     } else{
                             Sleep(1000);
                             printf("\n x LONGITUD SOBREPASA LOS 8 CARACTERES x \n");
-                            flag2 = 1;
+                            flag = 1;
+                            break;
                     }
+
                 } else{
                     Sleep(1000);
                     printf("\n x SE HAN DETECTADO CARACTERES NO ALFANUMERICOS x \n");
                     break;
-                    return 1;
                 }
 
-                token = strtok(NULL,ruta);
+                token = strtok(NULL,delim);
             }
 
-            if(flag2 == 0){
-                Sleep(1000);
-                printf("\n *** VALIDACIONES COMPLETADAS CON EXITO *** \n");
+            if(flag == 0){
                 return 0;
             } else{
-                Sleep(1000);
-                printf("\n x DIRECTORIOS CON MAS DE 8 CARACTERES x \n");
                 return 1;
             }
 
@@ -140,11 +140,13 @@ int validaRuta(char *ruta){
 char * guardaRuta(char *ruta, struct path *paths, int *cantidad_de_paths_cargados){
     int pos = 0, *niveles,flag = 0;
     static char aviso[50];
+    static char copia_ruta[128];
 
+    strcpy(copia_ruta,ruta);
 
     if(paths[0].niveles == 0){
-        strcpy(paths[*cantidad_de_paths_cargados].ruta,ruta);
-        niveles = nivelesRuta(ruta);
+        strcpy(paths[*cantidad_de_paths_cargados].ruta,copia_ruta);
+        niveles = nivelesRuta(copia_ruta);
         paths[*cantidad_de_paths_cargados].niveles = *niveles;
         (*cantidad_de_paths_cargados)++;
         strcpy(aviso,"*** PATH CREADO CON EXITO! ***");
@@ -155,17 +157,16 @@ char * guardaRuta(char *ruta, struct path *paths, int *cantidad_de_paths_cargado
         do{
             if(strcmp(ruta,paths[pos].ruta) == 0){
                 flag = 1;
-                break;
             } else{
                 pos++;
             }
 
-        } while(pos < 100 && flag == 0);
+        } while(pos < *cantidad_de_paths_cargados && flag == 0);
 
         if(flag == 1){
             strcpy(aviso,"x EL PATH YA EXISTE x");
         } else{
-            strcpy(paths[*cantidad_de_paths_cargados].ruta,ruta);
+            strcpy(paths[*cantidad_de_paths_cargados].ruta,copia_ruta);
             niveles = nivelesRuta(ruta);
             paths[*cantidad_de_paths_cargados].niveles = *niveles;
             (*cantidad_de_paths_cargados)++;
@@ -177,17 +178,18 @@ char * guardaRuta(char *ruta, struct path *paths, int *cantidad_de_paths_cargado
     }
 }
 
-int * nivelesRuta(char *ruta){
-    char delim[] = "/", *token;
+int * nivelesRuta(char *copia_ruta){
+    char delim[] = "/", *token,copia[128];
     static int cont_tokens = 0;
 
-    token = strtok(ruta,delim);
+    strcpy(copia,copia_ruta);
+
+    token = strtok(copia,delim);
     while(token != NULL){
         cont_tokens++;
-        token = strtok(delim,ruta);
+        token = strtok(NULL,delim);
     }
 
     return &cont_tokens;
 }
-
 
