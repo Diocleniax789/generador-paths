@@ -13,6 +13,7 @@ char * cargaRuta();
 int validaRuta(char*);
 char * guardaRuta(char*,struct path*,int*);
 int * nivelesRuta(char*);
+void listadoRutas(struct path*,int*);
 
 int main(){
     struct path paths[100];
@@ -55,6 +56,8 @@ int main(){
         } while(op != 's' && op != 'n');
 
     } while(op != 'n');
+
+    listadoRutas(paths,&cantidad_de_paths_cargados);
 
     return 0;
 }
@@ -180,7 +183,8 @@ char * guardaRuta(char *ruta, struct path *paths, int *cantidad_de_paths_cargado
 
 int * nivelesRuta(char *copia_ruta){
     char delim[] = "/", *token,copia[128];
-    static int cont_tokens = 0;
+    int cont_tokens = 0;
+    static int contador_tokens;
 
     strcpy(copia,copia_ruta);
 
@@ -190,6 +194,25 @@ int * nivelesRuta(char *copia_ruta){
         token = strtok(NULL,delim);
     }
 
-    return &cont_tokens;
+    contador_tokens = cont_tokens;
+
+    return &contador_tokens;
+
 }
 
+void listadoRutas(struct path* paths, int *cantidad_de_paths_cargados){
+    int i;
+
+    system("cls");
+    printf("\n Listado de todos los paths cargados \n");
+    printf("\n ------------------------------------ \n");
+    printf("\n");
+    for(i = 0; i < *cantidad_de_paths_cargados; i++){
+        printf("\n ´Path: %s \n",paths[i].ruta);
+        printf("\n  Niveles: %i \n",paths[i].niveles);
+        printf("\n ============================================= \n");
+    }
+
+    printf("\n");
+    system("pause");
+}
