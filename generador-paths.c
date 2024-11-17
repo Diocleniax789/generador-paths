@@ -138,30 +138,43 @@ int validaRuta(char *ruta){
 }
 
 char * guardaRuta(char *ruta, struct path *paths, int *cantidad_de_paths_cargados){
-    int pos, *niveles,flag = 0;
+    int pos = 0, *niveles,flag = 0;
     static char aviso[50];
 
-    do{
-        if(ruta == paths[pos].ruta){
-            flag = 1;
-            break;
-        } else{
-            pos++;
-        }
 
-    } while(pos < 100 && flag == 0);
-
-    if(flag == 1){
-        strcpy(aviso,"x EL PATH YA EXISTE x");
-    } else{
+    if(paths[0].niveles == 0){
         strcpy(paths[*cantidad_de_paths_cargados].ruta,ruta);
         niveles = nivelesRuta(ruta);
         paths[*cantidad_de_paths_cargados].niveles = *niveles;
         (*cantidad_de_paths_cargados)++;
         strcpy(aviso,"*** PATH CREADO CON EXITO! ***");
-    }
+        return aviso;
+
+    } else{
+
+        do{
+            if(strcmp(ruta,paths[pos].ruta) == 0){
+                flag = 1;
+                break;
+            } else{
+                pos++;
+            }
+
+        } while(pos < 100 && flag == 0);
+
+        if(flag == 1){
+            strcpy(aviso,"x EL PATH YA EXISTE x");
+        } else{
+            strcpy(paths[*cantidad_de_paths_cargados].ruta,ruta);
+            niveles = nivelesRuta(ruta);
+            paths[*cantidad_de_paths_cargados].niveles = *niveles;
+            (*cantidad_de_paths_cargados)++;
+            strcpy(aviso,"*** PATH CREADO CON EXITO! ***");
+        }
 
     return aviso;
+
+    }
 }
 
 int * nivelesRuta(char *ruta){
