@@ -55,3 +55,14 @@ int main(){
 
     return 0;
 }
+
+char * cargaRuta(){
+    static char ruta[128];
+
+    printf("\n + Ingrese path: ");
+    fgets(ruta,sizeof(ruta),stdin);
+    ruta[strcspn(ruta,"\n")] = '\0';
+    printf("\n");
+    printf("\n - Path generado - \n");
+    return ruta;
+}
