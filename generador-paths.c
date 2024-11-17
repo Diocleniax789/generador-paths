@@ -43,7 +43,8 @@ int main(){
 
         do{
             fflush(stdin);
-            printf("\n - Desea agregar otro path? Ingrese <s/n>");
+            printf("\n ----------------------------------------------");
+            printf("\n - Desea agregar otro path? Ingrese <s/n> : ");
             scanf("%c",&op);
             if(op != 's' && op != 'n'){
                 printf("\n x ERROR. INGRESE 's' O 'n' x \n");
