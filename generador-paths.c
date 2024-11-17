@@ -22,13 +22,15 @@ int main(){
 
     do{
         system("cls");
+        fflush(stdin);
+        printf("\n CARGA DE PATHS \n");
         ruta = cargaRuta();
         rutaValida = validaRuta(ruta);
         if(rutaValida == 0){
            printf("\n");
            printf("\n *** Sintaxis correcta! *** \n");
            guardado = guardaRuta(ruta,paths,&cantidad_de_paths_cargados);
-           if(strcmp(guardado,"*** Path creado con exito! ***") == 0){
+           if(strcmp(guardado,"*** PATH CREADO CON EXITO! ***") == 0){
                 printf("\n");
                 printf("%s",guardado);
                 printf("\n");
@@ -121,7 +123,6 @@ int validaRuta(char *ruta){
                 return 1;
             }
 
-
         } else{
             Sleep(1000);
             printf("\n x LA RUTA NO COMIENZA CON O TERMINA CON '/' x \n");
@@ -134,6 +135,46 @@ int validaRuta(char *ruta){
         return 1;
     }
 
+}
+
+char * guardaRuta(char *ruta, struct path *paths, int *cantidad_de_paths_cargados){
+    int pos, *niveles,flag = 0;
+    static char aviso[50];
+
+    do{
+        if(ruta == paths[pos].ruta){
+            flag = 1;
+            break;
+        } else{
+            pos++;
+        }
+
+    } while(pos < 100 && flag == 0);
+
+    if(flag == 1){
+        strcpy(aviso,"x EL PATH YA EXISTE x");
+    } else{
+        strcpy(paths[*cantidad_de_paths_cargados].ruta,ruta);
+        niveles = nivelesRuta(ruta);
+        paths[*cantidad_de_paths_cargados].niveles = *niveles;
+        (*cantidad_de_paths_cargados)++;
+        strcpy(aviso,"*** PATH CREADO CON EXITO! ***");
+    }
+
+    return aviso;
+}
+
+int * nivelesRuta(char *ruta){
+    char delim[] = "/", *token;
+    static int cont_tokens = 0;
+
+    token = strtok(ruta,delim);
+    while(token != NULL){
+        cont_tokens++;
+        token = strtok(delim,ruta);
+    }
+
+    return &cont_tokens;
 }
 
 
