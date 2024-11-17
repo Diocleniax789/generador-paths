@@ -70,7 +70,7 @@ char * cargaRuta(){
 }
 
 int validaRuta(char *ruta){
-    int longitud_path,i,flag = 0,longitud_token;
+    int longitud_path,i,flag = 0,longitud_token,flag2 = 0;
     char delim[] = "/", *token;
 
     longitud_path = strlen(ruta);
@@ -96,11 +96,10 @@ int validaRuta(char *ruta){
                     if(longitud_token >= 1 && longitud_token <= 8){
                             Sleep(1000);
                             printf("\n * DIRECTORIO VALIDO * \n");
-                            return 0;
                     } else{
                             Sleep(1000);
                             printf("\n x LONGITUD SOBREPASA LOS 8 CARACTERES x \n");
-                            return 1;
+                            flag2 = 1;
                     }
                 } else{
                     Sleep(1000);
@@ -111,6 +110,17 @@ int validaRuta(char *ruta){
 
                 token = strtok(NULL,ruta);
             }
+
+            if(flag2 == 0){
+                Sleep(1000);
+                printf("\n *** VALIDACIONES COMPLETADAS CON EXITO *** \n");
+                return 0;
+            } else{
+                Sleep(1000);
+                printf("\n x DIRECTORIOS CON MAS DE 8 CARACTERES x \n");
+                return 1;
+            }
+
 
         } else{
             Sleep(1000);
